@@ -7,10 +7,17 @@ namespace ExampleApi.Tests;
 
 public class WeatherForecastControllerTests
 {
+	private readonly WebApplicationFactory<Program> webApplicationFactory;
+
+	public WeatherForecastControllerTests()
+	{
+		webApplicationFactory = new WebApplicationFactory<Program>();
+	}
+
 	[Fact]
 	public async Task ShouldReturnOkWhenHttpGetRequestIsReceived()
 	{
-		var httpClient = new WebApplicationFactory<Program>().CreateClient();
+		var httpClient = webApplicationFactory.CreateClient();
 
 		var response = await httpClient.GetAsync("WeatherForecast");
 
@@ -20,7 +27,7 @@ public class WeatherForecastControllerTests
 	[Fact]
 	public async Task ShouldReturnValidForecastsOnGetRequest()
 	{
-		var httpClient = new WebApplicationFactory<Program>().CreateClient();
+		var httpClient = webApplicationFactory.CreateClient();
 
 		var response = await httpClient.GetFromJsonAsync<IEnumerable<WeatherForecast>>("WeatherForecast");
 
