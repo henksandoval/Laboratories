@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using System.Net.Mime;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -38,5 +39,15 @@ public class WeatherForecastControllerTests
 			forecast.TemperatureC.Should().BeInRange(-20, 55);
 			forecast.Summary.Should().NotBeNullOrWhiteSpace();
 		});
+	}
+
+	[Fact]
+	public async Task ShouldReturnValidJsonOnGetRequest()
+	{
+		var httpClient = webApplicationFactory.CreateClient();
+
+		var response = await httpClient.GetAsync("WeatherForecast");
+
+		response.Content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Json);
 	}
 }
