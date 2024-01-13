@@ -4,34 +4,35 @@ using System.Net.Mime;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
-namespace ExampleApi.Tests;
+namespace ExampleApi.Tests.Controllers;
 
-public class WeatherForecastControllerTests
+public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactory<Program>>
 {
-	private readonly WebApplicationFactory<Program> webApplicationFactory;
+	private const string? RequestUri = "WeatherForecast";
+	private readonly HttpClient httpClient;
 
-	public WeatherForecastControllerTests()
+	public WeatherForecastControllerTests(WebApplicationFactory<Program> factory)
 	{
-		webApplicationFactory = new WebApplicationFactory<Program>();
+		httpClient = factory.CreateClient();
 	}
 
 	[Fact]
 	public async Task ShouldReturnOkWhenHttpGetRequestIsReceived()
 	{
-		var httpClient = webApplicationFactory.CreateClient();
+		//Act
+		var response = await httpClient.GetAsync(RequestUri);
 
-		var response = await httpClient.GetAsync("WeatherForecast");
-
+		//Assert
 		response.StatusCode.Should().Be(HttpStatusCode.OK);
 	}
 
 	[Fact]
 	public async Task ShouldReturnValidForecastsOnGetRequest()
 	{
-		var httpClient = webApplicationFactory.CreateClient();
+		//Act
+		var response = await httpClient.GetFromJsonAsync<IEnumerable<WeatherForecast>>(RequestUri);
 
-		var response = await httpClient.GetFromJsonAsync<IEnumerable<WeatherForecast>>("WeatherForecast");
-
+		//Assert
 		var expectedDate = DateOnly.FromDateTime(DateTime.Now);
 		response.Should().AllSatisfy(forecast =>
 		{
@@ -44,10 +45,10 @@ public class WeatherForecastControllerTests
 	[Fact]
 	public async Task ShouldReturnValidJsonOnGetRequest()
 	{
-		var httpClient = webApplicationFactory.CreateClient();
+		//Act
+		var response = await httpClient.GetAsync(RequestUri);
 
-		var response = await httpClient.GetAsync("WeatherForecast");
-
+		//Assert
 		response.Content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Json);
 	}
 }
