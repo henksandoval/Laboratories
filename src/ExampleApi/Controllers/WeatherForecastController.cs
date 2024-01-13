@@ -1,4 +1,4 @@
-using ExampleApi.Data.Entities;
+using ExampleApi.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExampleApi.Controllers;
@@ -13,10 +13,12 @@ public class WeatherForecastController : ControllerBase
 	};
 
 	private readonly ILogger<WeatherForecastController> _logger;
+	private readonly WeatherDbContext context;
 
-	public WeatherForecastController(ILogger<WeatherForecastController> logger)
+	public WeatherForecastController(ILogger<WeatherForecastController> logger, WeatherDbContext context)
 	{
 		_logger = logger;
+		this.context = context;
 	}
 
 	[HttpGet(Name = "GetWeatherForecast")]
@@ -34,12 +36,7 @@ public class WeatherForecastController : ControllerBase
 	[HttpGet("{id:int}", Name = "GetWeatherForecastById")]
 	public async Task<IActionResult> GetAsync(int id)
 	{
-		var weatherForecast = new WeatherForecastEntity
-		{
-			Date = DateTime.Today.AddDays(1),
-			Summary = "Cool",
-			TemperatureC = 4
-		};
+		var weatherForecast = await context.WeatherForecasts.FindAsync(id);
 		return Ok(weatherForecast);
 	}
 }

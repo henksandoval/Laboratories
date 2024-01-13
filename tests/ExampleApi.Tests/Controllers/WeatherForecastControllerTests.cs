@@ -57,24 +57,6 @@ public class WeatherForecastControllerTests : IClassFixture<CustomWebApplication
 	}
 
 	[Fact]
-	public async Task ShouldReturnRecordById()
-	{
-		//Arrange
-		var expected = new WeatherForecastEntity
-		{
-			Date = DateTime.Today.AddDays(1),
-			Summary = "Cool",
-			TemperatureC = 4
-		};
-
-		//Act
-		var response = await httpClient.GetFromJsonAsync<WeatherForecastEntity>($"{RequestUri}/{expected.Id}");
-
-		//Assert
-		response.Should().BeEquivalentTo(expected);
-	}
-
-	[Fact]
 	public async Task ShouldReturnRecordByIdFromDatabase()
 	{
 		//Arrange
