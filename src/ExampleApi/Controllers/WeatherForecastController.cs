@@ -1,3 +1,4 @@
+using ExampleApi.Data.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExampleApi.Controllers;
@@ -28,5 +29,17 @@ public class WeatherForecastController : ControllerBase
 				Summary = Summaries[Random.Shared.Next(Summaries.Length)]
 			})
 			.ToArray();
+	}
+
+	[HttpGet("{id:int}", Name = "GetWeatherForecastById")]
+	public async Task<IActionResult> GetAsync(int id)
+	{
+		var weatherForecast = new WeatherForecastEntity
+		{
+			Date = DateTime.Today.AddDays(1),
+			Summary = "Cool",
+			TemperatureC = 4
+		};
+		return Ok(weatherForecast);
 	}
 }
