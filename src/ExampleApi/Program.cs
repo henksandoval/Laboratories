@@ -12,7 +12,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<WeatherDbContext>(options =>
 {
-	options.UseInMemoryDatabase("WeatherForecastDatabase");
+	var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+	options.UseSqlServer(connectionString);
 });
 
 var app = builder.Build();
