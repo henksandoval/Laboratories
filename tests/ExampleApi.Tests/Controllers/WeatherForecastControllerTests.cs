@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Net.Mime;
+using ExampleApi.Data.Entities;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 
@@ -50,5 +51,23 @@ public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactor
 
 		//Assert
 		response.Content.Headers.ContentType.MediaType.Should().Be(MediaTypeNames.Application.Json);
+	}
+
+	[Fact]
+	public async Task ShouldReturnRecordById()
+	{
+		//Arrange
+		var expected = new WeatherForecastEntity
+		{
+			Date = DateTime.Today.AddDays(1),
+			Summary = "Cool",
+			TemperatureC = 4
+		};
+
+		//Act
+		var response = await httpClient.GetFromJsonAsync<WeatherForecastEntity>($"{RequestUri}/{expected.Id}");
+
+		//Assert
+		response.Should().BeEquivalentTo(expected);
 	}
 }
