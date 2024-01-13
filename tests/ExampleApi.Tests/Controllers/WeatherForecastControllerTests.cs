@@ -3,16 +3,15 @@ using System.Net.Http.Json;
 using System.Net.Mime;
 using ExampleApi.Data.Entities;
 using FluentAssertions;
-using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace ExampleApi.Tests.Controllers;
 
-public class WeatherForecastControllerTests : IClassFixture<WebApplicationFactory<Program>>
+public class WeatherForecastControllerTests : IClassFixture<CustomWebApplicationFactory<Program>>
 {
 	private const string? RequestUri = "WeatherForecast";
 	private readonly HttpClient httpClient;
 
-	public WeatherForecastControllerTests(WebApplicationFactory<Program> factory)
+	public WeatherForecastControllerTests(CustomWebApplicationFactory<Program> factory)
 	{
 		httpClient = factory.CreateClient();
 	}
