@@ -1,10 +1,8 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Net.Mime;
-using ExampleApi.Data;
 using ExampleApi.Data.Entities;
 using FluentAssertions;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace ExampleApi.Tests.Controllers;
 
@@ -67,10 +65,7 @@ public class WeatherForecastControllerTests : IClassFixture<CustomWebApplication
 			TemperatureC = 4
 		};
 
-		var scope = factory.Services.CreateScope();
-		var dbContext = scope.ServiceProvider.GetRequiredService<WeatherDbContext>();
-		await dbContext.WeatherForecasts.AddAsync(expected);
-		await dbContext.SaveChangesAsync();
+		await factory.AddRecordToDatabaseAsync(expected);
 
 		//Act
 		var response = await httpClient.GetFromJsonAsync<WeatherForecastEntity>($"{RequestUri}/{expected.Id}");
